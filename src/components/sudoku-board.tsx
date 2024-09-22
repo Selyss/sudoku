@@ -8,21 +8,32 @@ interface SudokuBoardProps {
 }
 
 export function SudokuBoard({ board, initialBoard, handleCellClick, isCellValid }: SudokuBoardProps) {
+    if (!board.length) return null
     return (
-        <div className="grid grid-cols-9 gap-0 border-2 border-primary mb-4">
-            {board.map((row, rowIndex) =>
-                row.map((cell, colIndex) => (
-                    <SudokuCell
-                        key={`${rowIndex}-${colIndex}`}
-                        value={cell}
-                        isInitial={initialBoard[rowIndex]?.[colIndex] !== 0}
-                        isValid={isCellValid(rowIndex, colIndex)}
-                        onClick={() => handleCellClick(rowIndex, colIndex)}
-                        rowIndex={rowIndex}
-                        colIndex={colIndex}
-                    />
-                ))
-            )}
+        <div className="grid grid-cols-3 gap-[2px] bg-neutral-700 p-[2px]">
+          {[0, 1, 2].map((boxRow) => (
+            <div key={boxRow} className="col-span-3 grid grid-cols-3 gap-[2px]">
+              {[0, 1, 2].map((boxCol) => (
+                <div key={`${boxRow}-${boxCol}`} className="grid grid-cols-3 gap-[1px] bg-neutral-800">
+                  {[0, 1, 2].map((cellRow) => (
+                    [0, 1, 2].map((cellCol) => {
+                      const row = boxRow * 3 + cellRow
+                      const col = boxCol * 3 + cellCol
+                      return (
+                        <div key={`${row}-${col}`} className="bg-black aspect-square">
+                          <SudokuCell
+                            value={board[row][col]}
+                            onClick={() => handleCellClick(row, col)}
+                            isInitial={initialBoard[row][col] !== ''}
+                          />
+                        </div>
+                      )
+                    })
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
-    )
+      )
 }
