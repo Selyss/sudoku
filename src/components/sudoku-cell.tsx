@@ -15,8 +15,8 @@ export function SudokuCell({ value, isInitial, isValid, onClick, rowIndex, colIn
         <button
           onClick={onClick}
           className={`w-full h-full flex items-center justify-center text-2xl font-bold
-            ${isInitial ? 'text-white' : 'text-purple-400'}
-            hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50`}
+            ${isInitial ? 'text-foreground' : 'text-purple-400'}
+            hover:bg-neutral-200 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50`}
         >
           {value !== 0 ? value : ''}
         </button>

@@ -19,7 +19,7 @@ export function SudokuBoard({ board, initialBoard, handleCellClick }: SudokuBoar
                       const row = boxRow * 3 + cellRow
                       const col = boxCol * 3 + cellCol
                       return (
-                        <div key={`${row}-${col}`} className="bg-black aspect-square">
+                        <div key={`${row}-${col}`} className="bg-background aspect-square">
                           <SudokuCell
                             value={board[row][col]}
                             onClick={() => handleCellClick(row, col)}
