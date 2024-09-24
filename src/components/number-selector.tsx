@@ -13,7 +13,7 @@ export function NumberSelector({ selectedNumber, setSelectedNumber }: NumberSele
                     key={num}
                     onClick={() => setSelectedNumber(num)}
                     className={`w-10 h-10 rounded-lg text-xl font-bold ${
-                        selectedNumber === num ? 'bg-purple-600 text-white' : 'bg-neutral-800 text-purple-400'
+                        selectedNumber === num ? 'bg-purple-600 text-white' : 'bg-neutral-200 dark:bg-neutral-800 text-purple-600'
                     }`}
                 >
                     {num}
