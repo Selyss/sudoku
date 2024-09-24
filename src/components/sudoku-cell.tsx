@@ -12,15 +12,13 @@ interface SudokuCellProps {
 
 export function SudokuCell({ value, isInitial, isValid, onClick, rowIndex, colIndex }: SudokuCellProps) {
     return (
-        <Button
+        <button
           onClick={onClick}
-          variant="ghost"
-          className={`w-full h-full p-0 flex items-center justify-center text-2xl font-bold
+          className={`w-full h-full flex items-center justify-center text-2xl font-bold
             ${isInitial ? 'text-white' : 'text-purple-400'}
-            hover:bg-neutral-800 focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50`}
-          disabled={isInitial}
+            hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50`}
         >
           {value !== 0 ? value : ''}
-        </Button>
+        </button>
       )
     }

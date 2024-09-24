@@ -1,4 +1,3 @@
-import { Button } from "~/components/ui/button";
 
 interface NumberSelectorProps {
     selectedNumber: number | null
@@ -10,16 +9,15 @@ export function NumberSelector({ selectedNumber, setSelectedNumber }: NumberSele
     return (
         <div className="flex justify-between mt-6">
             {numbers.map((num) => (
-                <Button
+                <button
                     key={num}
                     onClick={() => setSelectedNumber(num)}
-                    variant={selectedNumber === num ? 'default' : 'outline'}
-                    className={`w-10 h-10 p-0 text-xl font-bold ${
+                    className={`w-10 h-10 rounded-lg text-xl font-bold ${
                         selectedNumber === num ? 'bg-purple-600 text-white' : 'bg-neutral-800 text-purple-400'
                     }`}
                 >
                     {num}
-                </Button>
+                </button>
             ))}
         </div>
     )
