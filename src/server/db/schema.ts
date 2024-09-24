@@ -12,19 +12,14 @@ import { index, int, sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
  */
 export const createTable = sqliteTableCreator((name) => `sudoku_${name}`);
 
-export const posts = createTable(
-  "post",
+export const puzzles = createTable(
+  "puzzles",
   {
     id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-    name: text("name", { length: 256 }),
-    createdAt: int("created_at", { mode: "timestamp" })
-      .default(sql`(unixepoch())`)
-      .notNull(),
-    updatedAt: int("updated_at", { mode: "timestamp" }).$onUpdate(
-      () => new Date()
-    ),
+    puzzle: text("puzzle").notNull(),
+    solution: text("solution").notNull(),
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
+  (puzzle) => ({
+    idIndex: index("id_idx").on(puzzle.id),
   })
 );

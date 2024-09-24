@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { posts } from "~/server/db/schema";
+import { puzzles } from "~/server/db/schema";
 
-export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
+export const sudokuRouter = createTRPCRouter({
+  getPuzzle: publicProcedure
+    .input(z.object({ id: z.number() }))
     .query(({ input }) => {
       return {
         greeting: `Hello ${input.text}`,
