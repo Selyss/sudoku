@@ -3,10 +3,11 @@ import { SudokuCell } from "~/components/sudoku-cell";
 interface SudokuBoardProps {
     board: number[][]
     initialBoard: number[][]
+    selectedNumber: number | null
     handleCellClick: (row: number, col: number) => void
 }
 
-export function SudokuBoard({ board, initialBoard, handleCellClick }: SudokuBoardProps) {
+export function SudokuBoard({ board, initialBoard, selectedNumber, handleCellClick }: SudokuBoardProps) {
     if (!board.length) return null
     return (
         <div className="grid grid-cols-3 gap-[2px] bg-neutral-700 p-[2px]">
@@ -24,6 +25,9 @@ export function SudokuBoard({ board, initialBoard, handleCellClick }: SudokuBoar
                             value={board[row][col]}
                             onClick={() => handleCellClick(row, col)}
                             isInitial={initialBoard[row][col] !== 0}
+                            isSelected={board[row][col] !== 0 && board[row][col] === selectedNumber}
+                            rowIndex={row}
+                            colIndex={col}
                           />
                         </div>
                       )

@@ -47,8 +47,15 @@ export default function Home() {
   }, [])
 
   const handleCellClick = (row: number, col: number) => {
-    if (initialBoard[row][col] !== 0 || selectedNumber === null) return
+    if (initialBoard[row][col] !== 0) {
+      setSelectedNumber(selectedNumber === board[row][col] ? null : board[row][col])
+      return
+    }
 
+    if (selectedNumber === null) {
+      return
+    }
+    
     const newBoard = board.map(r => [...r])
     newBoard[row][col] = selectedNumber
 
@@ -70,6 +77,7 @@ export default function Home() {
           <SudokuBoard
             board={board}
             initialBoard={initialBoard}
+            selectedNumber={selectedNumber}
             handleCellClick={handleCellClick}
           />
           <NumberSelector
