@@ -4,10 +4,9 @@ interface SudokuBoardProps {
     board: number[][]
     initialBoard: number[][]
     handleCellClick: (row: number, col: number) => void
-    isCellValid: (row: number, col: number) => boolean
 }
 
-export function SudokuBoard({ board, initialBoard, handleCellClick, isCellValid }: SudokuBoardProps) {
+export function SudokuBoard({ board, initialBoard, handleCellClick }: SudokuBoardProps) {
     if (!board.length) return null
     return (
         <div className="grid grid-cols-3 gap-[2px] bg-neutral-700 p-[2px]">
@@ -24,7 +23,7 @@ export function SudokuBoard({ board, initialBoard, handleCellClick, isCellValid 
                           <SudokuCell
                             value={board[row][col]}
                             onClick={() => handleCellClick(row, col)}
-                            isInitial={initialBoard[row][col] !== ''}
+                            isInitial={initialBoard[row][col] !== 0}
                           />
                         </div>
                       )

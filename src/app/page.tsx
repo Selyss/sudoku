@@ -60,16 +60,15 @@ export default function Home() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background text-foreground">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-background border-none">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center">Sudoku</CardTitle>
-        </CardHeader>
+        </CardHeader> 
         <CardContent>
           <SudokuBoard
             board={board}
             initialBoard={initialBoard}
             handleCellClick={handleCellClick}
-            isCellValid={isCellValid}
           />
           <NumberSelector
             selectedNumber={selectedNumber}
