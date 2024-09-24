@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
 import { SudokuBoard } from '~/components/sudoku-board'
 import { NumberSelector } from '~/components/number-selector'
+import { ModeToggle } from '~/components/mode-toggle'
 
 // Helper functions (isValid, generateBoard, fillBox, solveSudoku) remain unchanged
 const isValid = (board: number[][], row: number, col: number, num: number) => {
@@ -60,11 +61,12 @@ export default function Home() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background text-foreground">
-      <Card className="w-full max-w-md bg-background border-none">
-        <CardHeader>
-          <CardTitle className="text-3xl font-bold text-center">Sudoku</CardTitle>
-        </CardHeader> 
-        <CardContent>
+      <div className="w-full max-w-md bg-background border-none">
+        <div className='p-4'>
+          <div className='flex justify-between items-center mb-4'>
+            <h1 className='text-4xl font-bold'>Sudoku</h1>
+            <ModeToggle />
+          </div>
           <SudokuBoard
             board={board}
             initialBoard={initialBoard}
@@ -74,8 +76,8 @@ export default function Home() {
             selectedNumber={selectedNumber}
             setSelectedNumber={setSelectedNumber}
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
