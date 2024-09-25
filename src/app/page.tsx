@@ -61,7 +61,7 @@ export default function Home() {
 
     setBoard(newBoard)
 
-    if (JSON.stringify(newBoard) !== JSON.stringify(solution)) {
+    if (JSON.stringify(newBoard) === JSON.stringify(solution)) {
       setIsGameWon(true);
       setShowModal(true);
     }
