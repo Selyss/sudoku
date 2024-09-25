@@ -6,6 +6,7 @@ import { NumberSelector } from '~/components/number-selector'
 import { ModeToggle } from '~/components/mode-toggle'
 import { api } from '~/trpc/react'
 import Timer from '~/components/timer'
+import CongratsModal from '~/components/congrats-modal'
 
 
 // Helper functions (isValid, generateBoard, fillBox, solveSudoku) remain unchanged
@@ -60,10 +61,14 @@ export default function Home() {
 
     setBoard(newBoard)
 
-    if (JSON.stringify(newBoard) === JSON.stringify(solution)) {
+    if (JSON.stringify(newBoard) !== JSON.stringify(solution)) {
       setIsGameWon(true);
       setShowModal(true);
     }
+  }
+
+  if (!board.length || !initialBoard.length) {
+    return <p>Loading</p>
   }
 
   const isCellValid = (row: number, col: number) => {
@@ -97,6 +102,8 @@ export default function Home() {
           )}
         </div>
       </div>
+      {/* TODO: turn into shadcnui component later*/}
+      <CongratsModal isOpen={showModal} onClose={() => setShowModal(false)} time={time} />
     </div>
   )
 }
