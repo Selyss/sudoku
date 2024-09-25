@@ -5,6 +5,7 @@ import { SudokuBoard } from '~/components/sudoku-board'
 import { NumberSelector } from '~/components/number-selector'
 import { ModeToggle } from '~/components/mode-toggle'
 import { api } from '~/trpc/react'
+import Timer from '~/components/timer'
 
 
 // Helper functions (isValid, generateBoard, fillBox, solveSudoku) remain unchanged
@@ -17,6 +18,7 @@ export default function Home() {
   const [solution, setSolution] = useState<number[][]>([])
   const [initialBoard, setInitialBoard] = useState<number[][]>([])
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null)
+  const [time, setTime] = useState(0)
 
   const { mutate: generatePuzzle, isPending } = api.sudoku.generatePuzzle.useMutation({
     onSuccess: (data) => {
@@ -29,6 +31,14 @@ export default function Home() {
 
   useEffect(() => {
     generatePuzzle();
+  }, [])
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime((prevTime) => prevTime + 1)
+    }, 1000)
+
+    return () => clearInterval(timer)
   }, [])
 
   const handleCellClick = (row: number, col: number) => {
@@ -56,6 +66,7 @@ export default function Home() {
       <div className="w-full max-w-md bg-background border-none">
         <div className='p-4'>
           <div className='flex justify-between items-center mb-4'>
+            <Timer time={time} />
             <h1 className='text-4xl font-bold'>Sudoku</h1>
             <ModeToggle />
           </div>
