@@ -5,7 +5,6 @@ import { SudokuBoard } from '~/components/sudoku-board'
 import { NumberSelector } from '~/components/number-selector'
 import { ModeToggle } from '~/components/mode-toggle'
 import { api } from '~/trpc/react'
-import { generatePuzzle } from '~/server/utils/sudokuGenerator'
 
 
 // Helper functions (isValid, generateBoard, fillBox, solveSudoku) remain unchanged
