@@ -19,6 +19,8 @@ export default function Home() {
   const [initialBoard, setInitialBoard] = useState<number[][]>([])
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null)
   const [time, setTime] = useState(0)
+  const [isGameWon, setIsGameWon] = useState(false)
+  const [showModal, setShowModal] = useState(false)
 
   const { mutate: generatePuzzle, isPending } = api.sudoku.generatePuzzle.useMutation({
     onSuccess: (data) => {
@@ -39,9 +41,11 @@ export default function Home() {
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [isGameWon])
 
   const handleCellClick = (row: number, col: number) => {
+    if (!board.length || !initialBoard.length || isGameWon) return;
+
     if (initialBoard[row][col] !== 0) {
       setSelectedNumber(selectedNumber === board[row][col] ? null : board[row][col])
       return
@@ -55,6 +59,11 @@ export default function Home() {
     newBoard[row][col] = selectedNumber
 
     setBoard(newBoard)
+
+    if (JSON.stringify(newBoard) === JSON.stringify(solution)) {
+      setIsGameWon(true);
+      setShowModal(true);
+    }
   }
 
   const isCellValid = (row: number, col: number) => {
