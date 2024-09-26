@@ -38,7 +38,9 @@ export default function Home() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTime((prevTime) => prevTime + 1)
+      if (!isGameWon){
+        setTime((prevTime) => prevTime + 1)
+      }
     }, 1000)
 
     return () => clearInterval(timer)
