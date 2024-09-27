@@ -7,6 +7,8 @@ import { ModeToggle } from '~/components/mode-toggle'
 import { api } from '~/trpc/react'
 import Timer from '~/components/timer'
 import CongratsModal from '~/components/congrats-modal'
+import { Button } from '~/components/ui/button'
+import { Settings } from 'lucide-react'
 
 
 // Helper functions (isValid, generateBoard, fillBox, solveSudoku) remain unchanged
@@ -38,7 +40,7 @@ export default function Home() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      if (!isGameWon){
+      if (!isGameWon) {
         setTime((prevTime) => prevTime + 1)
       }
     }, 1000)
@@ -71,6 +73,11 @@ export default function Home() {
     }
   }
 
+  const handleSettingsClick = () => {
+    // TODO: Implement settings functionality
+    console.log("Settings clicked")
+  }
+
   if (!board.length || !initialBoard.length) {
     return <p>Loading</p>
   }
@@ -87,6 +94,13 @@ export default function Home() {
             <Timer time={time} />
             <h1 className='text-4xl font-bold'>Sudoku</h1>
             <ModeToggle />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleSettingsClick}
+              >
+              <Settings className="h-5 w-5" />
+            </Button>
           </div>
           {isPending ? (
             <p>Loading puzzle...</p>
