@@ -54,12 +54,14 @@ export default function Home() {
       return
     }
 
-    if (selectedNumber === null) {
-      return
+    const newBoard = board.map(r => [...r])
+
+    if (newBoard[row][col] === selectedNumber) {
+      newBoard[row][col] = 0
+    } else if (selectedNumber !== null) {
+      newBoard[row][col] = selectedNumber
     }
 
-    const newBoard = board.map(r => [...r])
-    newBoard[row][col] = selectedNumber
 
     setBoard(newBoard)
 
