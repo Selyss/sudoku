@@ -94,7 +94,7 @@ export default function Home() {
             <Timer time={time} />
             <h1 className='text-3xl font-bold'>Sudoku</h1>
             <div className="flex items-center space-x-2">
-              <ModeToggle />
+              {/* <ModeToggle /> */}
               <Button
                 variant="outline"
                 size="icon"
