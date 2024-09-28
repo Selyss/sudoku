@@ -92,15 +92,17 @@ export default function Home() {
         <div className='p-4'>
           <div className='flex justify-between items-center mb-4'>
             <Timer time={time} />
-            <h1 className='text-4xl font-bold'>Sudoku</h1>
-            <ModeToggle />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleSettingsClick}
+            <h1 className='text-3xl font-bold'>Sudoku</h1>
+            <div className="flex items-center space-x-2">
+              <ModeToggle />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleSettingsClick}
               >
-              <Settings className="h-5 w-5" />
-            </Button>
+                <Settings className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
           {isPending ? (
             <p>Loading puzzle...</p>
