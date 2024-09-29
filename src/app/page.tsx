@@ -20,7 +20,7 @@ export default function Home() {
   const [board, setBoard] = useState<number[][]>([])
   const [solution, setSolution] = useState<number[][]>([])
   const [initialBoard, setInitialBoard] = useState<number[][]>([])
-  const [selectedNumber, setSelectedNumber] = useState<number | null>(null)
+  const [selectedNumber, setSelectedNumber] = useState<number | null>(null ?? null)
   const [time, setTime] = useState(0)
   const [isGameWon, setIsGameWon] = useState(false)
   const [showModal, setShowModal] = useState(false)
