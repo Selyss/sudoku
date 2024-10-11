@@ -78,9 +78,6 @@ export default function Home() {
     console.log("Settings clicked")
   }
 
-  if (!board.length || !initialBoard.length) {
-    return <p>Loading</p>
-  }
 
   const isCellValid = (row: number, col: number) => {
     return board[row][col] === 0 || isValid(board, row, col, board[row][col])
