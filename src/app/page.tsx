@@ -101,22 +101,18 @@ export default function Home() {
               </Button>
             </div>
           </div>
-          {isPending ? (
-            <p>Loading puzzle...</p>
-          ) : (
-            <>
-              <SudokuBoard
-                board={board}
-                initialBoard={initialBoard}
-                selectedNumber={selectedNumber}
-                handleCellClick={handleCellClick}
-              />
-              <NumberSelector
-                selectedNumber={selectedNumber}
-                setSelectedNumber={setSelectedNumber}
-              />
-            </>
-          )}
+          <>
+            <SudokuBoard
+              board={board}
+              initialBoard={initialBoard}
+              selectedNumber={selectedNumber}
+              handleCellClick={handleCellClick}
+            />
+            <NumberSelector
+              selectedNumber={selectedNumber}
+              setSelectedNumber={setSelectedNumber}
+            />
+          </>
         </div>
       </div>
       {/* TODO: turn into shadcnui component later*/}
