@@ -59,7 +59,10 @@ export default function Home() {
   const undo = () => {
     if (historyIndex > 0) {
       setHistoryIndex(historyIndex - 1);
-      setBoard(history[historyIndex - 1].map(row => [...row]));
+      const prevState = history[historyIndex - 1];
+      if (prevState) {
+        setBoard(prevState.map(row => [...row]));
+      }
     }
   }
 
@@ -67,7 +70,10 @@ export default function Home() {
   const redo = () => {
     if (historyIndex < history.length - 1) {
       setHistoryIndex(historyIndex + 1);
-      setBoard(history[historyIndex + 1].map(row => [...row]));
+      const nextState = history[historyIndex + 1];
+      if (nextState) {
+        setBoard(nextState.map(row => [...row]));
+      }
     }
   }
 
@@ -78,7 +84,7 @@ export default function Home() {
 
   useEffect(() => {
     generatePuzzle({ difficulty });
-  }, [])
+  }, [generatePuzzle, difficulty])
 
   const handleDifficultyChange = (newDifficulty: Difficulty) => {
     setDifficulty(newDifficulty);
@@ -114,10 +120,16 @@ export default function Home() {
       }      // Delete/Backspace - clear cell
       if ((e.key === 'Delete' || e.key === 'Backspace') && selectedCell) {
         const [row, col] = selectedCell;
-        if (initialBoard[row][col] === 0) {
+        if (initialBoard[row]?.[col] === 0) {
           const newBoard = board.map(r => [...r]);
-          newBoard[row][col] = 0;
-          setBoard(newBoard);
+          if (newBoard[row]?.[col] !== undefined) {
+            newBoard[row][col] = 0;
+            // Only add to history if the board actually changed
+            if (JSON.stringify(newBoard) !== JSON.stringify(board)) {
+              addToHistory(newBoard);
+            }
+            setBoard(newBoard);
+          }
         }
       }
 
@@ -158,7 +170,7 @@ export default function Home() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [board, initialBoard, selectedCell, selectedNumber, solution, isGameWon]);
+  }, [board, initialBoard, selectedCell, selectedNumber, solution, isGameWon, undo, redo, addToHistory, history, historyIndex]);
 
   const handleCellClick = (row: number, col: number) => {
     if (!board.length || !initialBoard.length || isGameWon) return;
@@ -175,7 +187,7 @@ export default function Home() {
 
     if (newBoard[row]?.[col] === selectedNumber) {
       newBoard[row][col] = 0
-    } else if (selectedNumber !== null) {
+    } else if (selectedNumber !== null && newBoard[row]?.[col] !== undefined) {
       newBoard[row][col] = selectedNumber
     }
 
@@ -241,7 +253,8 @@ export default function Home() {
   }
 
   const isCellValid = (row: number, col: number) => {
-    return board[row][col] === 0 || isValid(board, row, col, board[row][col])
+    const cellValue = board[row]?.[col];
+    return cellValue === 0 || cellValue === undefined || isValid(board, row, col, cellValue);
   }
 
   return (
