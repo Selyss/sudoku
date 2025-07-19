@@ -4,10 +4,11 @@ interface SudokuBoardProps {
     board: number[][]
     initialBoard: number[][]
     selectedNumber: number | null
+  selectedCell: [number, number] | null
     handleCellClick: (row: number, col: number) => void
 }
 
-export function SudokuBoard({ board, initialBoard, selectedNumber, handleCellClick }: SudokuBoardProps) {
+export function SudokuBoard({ board, initialBoard, selectedNumber, selectedCell, handleCellClick }: SudokuBoardProps) {
   if (!board.length) return null
     return (
         <div className="grid grid-cols-3 gap-[2px] bg-neutral-700 p-[2px]">
@@ -22,10 +23,12 @@ export function SudokuBoard({ board, initialBoard, selectedNumber, handleCellCli
                       return (
                         <div key={`${row}-${col}`} className="bg-background aspect-square">
                           <SudokuCell
-                            value={board[row][col]}
+                            value={board[row]?.[col] ?? 0}
                             onClick={() => handleCellClick(row, col)}
-                            isInitial={initialBoard[row][col] !== 0}
-                            isSelected={board[row][col] !== 0 && board[row][col] === selectedNumber}
+                            isInitial={initialBoard[row]?.[col] !== 0}
+                            isSelected={board[row]?.[col] !== 0 && board[row]?.[col] === selectedNumber}
+                            isCellSelected={selectedCell?.[0] === row && selectedCell?.[1] === col}
+                            isValid={true}
                             rowIndex={row}
                             colIndex={col}
                           />

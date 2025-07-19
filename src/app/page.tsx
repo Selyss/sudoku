@@ -23,6 +23,7 @@ export default function Home() {
   const [solution, setSolution] = useState<number[][]>([])
   const [initialBoard, setInitialBoard] = useState<number[][]>([])
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null)
+  const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null)
   const [time, setTime] = useState(0)
   const [isGameWon, setIsGameWon] = useState(false)
   const [showModal, setShowModal] = useState(false)
@@ -63,22 +64,74 @@ export default function Home() {
     return () => clearInterval(timer)
   }, [isGameWon])
 
+  // Keyboard controls
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!board.length || !initialBoard.length || isGameWon) return;
+
+      // Number keys (1-9) - always switch to number selection mode
+      if (e.key >= '1' && e.key <= '9') {
+        const num = parseInt(e.key);
+        
+        // Switch to number selection mode and deselect cell
+        setSelectedNumber(selectedNumber === num ? null : num);
+        setSelectedCell(null);
+      }      // Delete/Backspace - clear cell
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedCell) {
+        const [row, col] = selectedCell;
+        if (initialBoard[row][col] === 0) {
+          const newBoard = board.map(r => [...r]);
+          newBoard[row][col] = 0;
+          setBoard(newBoard);
+        }
+      }
+
+      // Arrow keys - navigate cells
+      if (selectedCell && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        const [row, col] = selectedCell;
+        let newRow = row;
+        let newCol = col;
+
+        switch (e.key) {
+          case 'ArrowUp': newRow = Math.max(0, row - 1); break;
+          case 'ArrowDown': newRow = Math.min(8, row + 1); break;
+          case 'ArrowLeft': newCol = Math.max(0, col - 1); break;
+          case 'ArrowRight': newCol = Math.min(8, col + 1); break;
+        }
+
+        setSelectedCell([newRow, newCol]);
+      }
+
+      // Escape - clear selection
+      if (e.key === 'Escape') {
+        setSelectedCell(null);
+        setSelectedNumber(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [board, initialBoard, selectedCell, selectedNumber, solution, isGameWon]);
+
   const handleCellClick = (row: number, col: number) => {
     if (!board.length || !initialBoard.length || isGameWon) return;
 
-    if (initialBoard[row][col] !== 0) {
-      setSelectedNumber(selectedNumber === board[row][col] ? null : board[row][col])
+    // Set selected cell for keyboard navigation
+    setSelectedCell([row, col]);
+
+    if (initialBoard[row]?.[col] !== 0) {
+      setSelectedNumber(selectedNumber === board[row]?.[col] ? null : board[row]?.[col] ?? null)
       return
     }
 
     const newBoard = board.map(r => [...r])
 
-    if (newBoard[row][col] === selectedNumber) {
+    if (newBoard[row]?.[col] === selectedNumber) {
       newBoard[row][col] = 0
     } else if (selectedNumber !== null) {
       newBoard[row][col] = selectedNumber
     }
-
 
     setBoard(newBoard)
 
@@ -174,6 +227,7 @@ export default function Home() {
             board={board}
             initialBoard={initialBoard}
             selectedNumber={selectedNumber}
+            selectedCell={selectedCell}
             handleCellClick={handleCellClick}
           />
           <NumberSelector
@@ -181,6 +235,13 @@ export default function Home() {
             onNumberSelect={setSelectedNumber}
             board={board}
           />
+
+          {/* Keyboard controls hint */}
+          <div className="mt-4 text-center">
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+              Use arrow keys to navigate • Number keys to select numbers • Delete/Backspace to clear • Escape to deselect
+            </p>
+          </div>
         </div>
       </div>
       {/* TODO: turn into shadcnui component later*/}
