@@ -5,9 +5,10 @@ interface CongratsModalProps {
     isOpen: boolean
     onClose: () => void
     time: number
+    onNewGame: () => void
 }
 
-export default function CongratsModal({ isOpen, onClose, time }: CongratsModalProps) {
+export default function CongratsModal({ isOpen, onClose, time, onNewGame }: CongratsModalProps) {
     if (!isOpen) return null;
 
     return (
@@ -22,12 +23,23 @@ export default function CongratsModal({ isOpen, onClose, time }: CongratsModalPr
                 <p className="text-neutral-200 mb-4">You've solved the Sudoku puzzle!</p>
                 {/* TODO: make the time stop updating */}
                 <p className="text-neutral-200 mb-6">Your time: <span className="font-bold text-purple-400">{formatTime(time)}</span></p>
-                <button
-                    onClick={onClose}
-                    className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"
-                >
-                    Close
-                </button>
+                <div className="flex space-x-3">
+                    <button
+                        onClick={onClose}
+                        className="flex-1 bg-neutral-600 text-white py-2 px-4 rounded-lg hover:bg-neutral-700 transition-colors"
+                    >
+                        Close
+                    </button>
+                    <button
+                        onClick={() => {
+                            onNewGame();
+                            onClose();
+                        }}
+                        className="flex-1 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"
+                    >
+                        New Game
+                    </button>
+                </div>
             </div>
         </div>
     )

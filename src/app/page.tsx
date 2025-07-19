@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react'
 import { SudokuBoard } from '~/components/sudoku-board'
 import { NumberSelector } from '~/components/number-selector'
 import { ModeToggle } from '~/components/mode-toggle'
+import { DifficultySelector, type Difficulty } from '~/components/difficulty-selector'
 import { api } from '~/trpc/react'
 import Timer from '~/components/timer'
 import CongratsModal from '~/components/congrats-modal'
 import { Button } from '~/components/ui/button'
-import { Settings } from 'lucide-react'
+import { Settings, RotateCcw } from 'lucide-react'
 
 
 // Helper functions (isValid, generateBoard, fillBox, solveSudoku) remain unchanged
@@ -24,19 +25,32 @@ export default function Home() {
   const [time, setTime] = useState(0)
   const [isGameWon, setIsGameWon] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy')
 
   const { mutate: generatePuzzle, isPending } = api.sudoku.generatePuzzle.useMutation({
     onSuccess: (data) => {
       setBoard(data.puzzle);
       setInitialBoard(data.puzzle.map(row => [...row]));
       setSolution(data.solution);
+      setTime(0);
+      setIsGameWon(false);
+      setShowModal(false);
     }
   })
 
 
   useEffect(() => {
-    generatePuzzle();
+    generatePuzzle({ difficulty });
   }, [])
+
+  const handleDifficultyChange = (newDifficulty: Difficulty) => {
+    setDifficulty(newDifficulty);
+    generatePuzzle({ difficulty: newDifficulty });
+  }
+
+  const handleNewGame = () => {
+    generatePuzzle({ difficulty });
+  }
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -104,6 +118,17 @@ export default function Home() {
               </Button>
             </div>
           </div>
+
+          <div className="flex justify-between items-center mb-4">
+            <DifficultySelector
+              difficulty={difficulty}
+              onDifficultyChange={handleDifficultyChange}
+            />
+            <Button variant="outline" onClick={handleNewGame} disabled={isPending}>
+              <RotateCcw className="h-4 w-4 mr-2" />
+              New Game
+            </Button>
+          </div>
           {isPending ? (
             <p>Loading puzzle...</p>
           ) : (
@@ -116,14 +141,19 @@ export default function Home() {
                 />
                 <NumberSelector
                   selectedNumber={selectedNumber}
-                  setSelectedNumber={setSelectedNumber}
+                  onNumberSelect={setSelectedNumber}
                 />
               </>
           )}
         </div>
       </div>
       {/* TODO: turn into shadcnui component later*/}
-      <CongratsModal isOpen={showModal} onClose={() => setShowModal(false)} time={time} />
+      <CongratsModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        time={time}
+        onNewGame={handleNewGame}
+      />
     </div>
   )
 }
