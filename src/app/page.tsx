@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { SudokuBoard } from '~/components/sudoku-board'
+import { SudokuBoardSkeleton } from '~/components/sudoku-board-skeleton'
 import { NumberSelector } from '~/components/number-selector'
 import { ModeToggle } from '~/components/mode-toggle'
 import { DifficultySelector, type Difficulty } from '~/components/difficulty-selector'
@@ -92,8 +93,47 @@ export default function Home() {
     console.log("Settings clicked")
   }
 
-  if (!board.length || !initialBoard.length) {
-    return <p>Loading</p>
+  if (!board.length || !initialBoard.length || isPending) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background text-foreground">
+        <div className="w-full max-w-md bg-background border-none">
+          <div className='p-4'>
+            <div className='flex justify-between items-center mb-4'>
+              <Timer time={time} />
+              <h1 className='text-3xl font-bold'>Sudoku</h1>
+              <div className="flex items-center space-x-2">
+                <ModeToggle />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleSettingsClick}
+                >
+                  <Settings className="h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center mb-4">
+              <DifficultySelector
+                difficulty={difficulty}
+                onDifficultyChange={handleDifficultyChange}
+              />
+              <Button variant="outline" onClick={handleNewGame} disabled={isPending}>
+                <RotateCcw className="h-4 w-4 mr-2" />
+                New Game
+              </Button>
+            </div>
+
+            <SudokuBoardSkeleton />
+            <NumberSelector
+              selectedNumber={selectedNumber}
+              onNumberSelect={setSelectedNumber}
+              board={board.length ? board : Array(9).fill(Array(9).fill(0))}
+            />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const isCellValid = (row: number, col: number) => {
@@ -129,22 +169,18 @@ export default function Home() {
               New Game
             </Button>
           </div>
-          {isPending ? (
-            <p>Loading puzzle...</p>
-          ) : (
-              <>
-                <SudokuBoard
-                  board={board}
-                  initialBoard={initialBoard}
-                  selectedNumber={selectedNumber}
-                  handleCellClick={handleCellClick}
-                />
-                <NumberSelector
-                  selectedNumber={selectedNumber}
-                  onNumberSelect={setSelectedNumber}
-                />
-              </>
-          )}
+
+          <SudokuBoard
+            board={board}
+            initialBoard={initialBoard}
+            selectedNumber={selectedNumber}
+            handleCellClick={handleCellClick}
+          />
+          <NumberSelector
+            selectedNumber={selectedNumber}
+            onNumberSelect={setSelectedNumber}
+            board={board}
+          />
         </div>
       </div>
       {/* TODO: turn into shadcnui component later*/}
