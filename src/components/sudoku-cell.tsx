@@ -18,7 +18,7 @@ export function SudokuCell({ value, isInitial, isSelected, isCellSelected, isVal
           onClick={onClick}
         className={`w-full h-full flex items-center justify-center text-2xl font-bold transition-colors
             ${isInitial ? 'text-foreground' : 'text-purple-600'}
-            ${isSelected ? 'bg-purple-100 dark:bg-purple-900' : ''}
+            ${isSelected ? 'bg-neutral-400/30 dark:bg-neutral-500/30' : ''}
             ${isCellSelected ? 'bg-blue-200 dark:bg-blue-800 ring-2 ring-blue-500' : ''}
             ${!isSelected && !isCellSelected ? 'hover:bg-neutral-200 dark:hover:bg-neutral-800' : ''}
             focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50`}
