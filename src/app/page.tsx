@@ -20,7 +20,7 @@ export default function Home() {
   const [board, setBoard] = useState<number[][]>([])
   const [solution, setSolution] = useState<number[][]>([])
   const [initialBoard, setInitialBoard] = useState<number[][]>([])
-  const [selectedNumber, setSelectedNumber] = useState<number | null>(null ?? null)
+  const [selectedNumber, setSelectedNumber] = useState<number | null>(null)
   const [time, setTime] = useState(0)
   const [isGameWon, setIsGameWon] = useState(false)
   const [showModal, setShowModal] = useState(false)
@@ -78,6 +78,9 @@ export default function Home() {
     console.log("Settings clicked")
   }
 
+  if (!board.length || !initialBoard.length) {
+    return <p>Loading</p>
+  }
 
   const isCellValid = (row: number, col: number) => {
     return board[row][col] === 0 || isValid(board, row, col, board[row][col])
@@ -91,7 +94,7 @@ export default function Home() {
             <Timer time={time} />
             <h1 className='text-3xl font-bold'>Sudoku</h1>
             <div className="flex items-center space-x-2">
-              {/* <ModeToggle /> */}
+              <ModeToggle />
               <Button
                 variant="outline"
                 size="icon"
@@ -101,18 +104,22 @@ export default function Home() {
               </Button>
             </div>
           </div>
-          <>
-            <SudokuBoard
-              board={board}
-              initialBoard={initialBoard}
-              selectedNumber={selectedNumber}
-              handleCellClick={handleCellClick}
-            />
-            <NumberSelector
-              selectedNumber={selectedNumber}
-              setSelectedNumber={setSelectedNumber}
-            />
-          </>
+          {isPending ? (
+            <p>Loading puzzle...</p>
+          ) : (
+              <>
+                <SudokuBoard
+                  board={board}
+                  initialBoard={initialBoard}
+                  selectedNumber={selectedNumber}
+                  handleCellClick={handleCellClick}
+                />
+                <NumberSelector
+                  selectedNumber={selectedNumber}
+                  setSelectedNumber={setSelectedNumber}
+                />
+              </>
+          )}
         </div>
       </div>
       {/* TODO: turn into shadcnui component later*/}

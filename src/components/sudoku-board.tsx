@@ -8,7 +8,7 @@ interface SudokuBoardProps {
 }
 
 export function SudokuBoard({ board, initialBoard, selectedNumber, handleCellClick }: SudokuBoardProps) {
-    if (!board.length || !initialBoard.length) return null
+  if (!board.length) return null
     return (
         <div className="grid grid-cols-3 gap-[2px] bg-neutral-700 p-[2px]">
           {[0, 1, 2].map((boxRow) => (
