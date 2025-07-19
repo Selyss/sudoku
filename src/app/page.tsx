@@ -10,7 +10,7 @@ import { api } from '~/trpc/react'
 import Timer from '~/components/timer'
 import CongratsModal from '~/components/congrats-modal'
 import { Button } from '~/components/ui/button'
-import { Settings, RotateCcw } from 'lucide-react'
+import { Settings, RotateCcw, Undo, Redo } from 'lucide-react'
 
 
 // Helper functions (isValid, generateBoard, fillBox, solveSudoku) remain unchanged
@@ -28,6 +28,10 @@ export default function Home() {
   const [isGameWon, setIsGameWon] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [difficulty, setDifficulty] = useState<Difficulty>('easy')
+  
+  // Undo/Redo system
+  const [history, setHistory] = useState<number[][][]>([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
 
   const { mutate: generatePuzzle, isPending } = api.sudoku.generatePuzzle.useMutation({
     onSuccess: (data) => {
@@ -37,8 +41,39 @@ export default function Home() {
       setTime(0);
       setIsGameWon(false);
       setShowModal(false);
+      // Reset history for new game
+      setHistory([data.puzzle.map(row => [...row])]);
+      setHistoryIndex(0);
     }
   })
+
+  // Add current board state to history
+  const addToHistory = (newBoard: number[][]) => {
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(newBoard.map(row => [...row]));
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  }
+
+  // Undo function
+  const undo = () => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
+      setBoard(history[historyIndex - 1].map(row => [...row]));
+    }
+  }
+
+  // Redo function
+  const redo = () => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1);
+      setBoard(history[historyIndex + 1].map(row => [...row]));
+    }
+  }
+
+  // Check if undo/redo are available
+  const canUndo = historyIndex > 0;
+  const canRedo = historyIndex < history.length - 1;
 
 
   useEffect(() => {
@@ -108,6 +143,17 @@ export default function Home() {
         setSelectedCell(null);
         setSelectedNumber(null);
       }
+      
+      // Undo/Redo shortcuts
+      if (e.ctrlKey && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      }
+      
+      if (e.ctrlKey && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+        e.preventDefault();
+        redo();
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -131,6 +177,11 @@ export default function Home() {
       newBoard[row][col] = 0
     } else if (selectedNumber !== null) {
       newBoard[row][col] = selectedNumber
+    }
+
+    // Only add to history if the board actually changed
+    if (JSON.stringify(newBoard) !== JSON.stringify(board)) {
+      addToHistory(newBoard);
     }
 
     setBoard(newBoard)
@@ -217,10 +268,30 @@ export default function Home() {
               difficulty={difficulty}
               onDifficultyChange={handleDifficultyChange}
             />
-            <Button variant="outline" onClick={handleNewGame} disabled={isPending}>
-              <RotateCcw className="h-4 w-4 mr-2" />
-              New Game
-            </Button>
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={undo}
+                disabled={!canUndo}
+                title="Undo (Ctrl+Z)"
+              >
+                <Undo className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={redo}
+                disabled={!canRedo}
+                title="Redo (Ctrl+Y)"
+              >
+                <Redo className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" onClick={handleNewGame} disabled={isPending}>
+                <RotateCcw className="h-4 w-4 mr-2" />
+                New Game
+              </Button>
+            </div>
           </div>
 
           <SudokuBoard
@@ -239,7 +310,7 @@ export default function Home() {
           {/* Keyboard controls hint */}
           <div className="mt-4 text-center">
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Use arrow keys to navigate • Number keys to select numbers • Delete/Backspace to clear • Escape to deselect
+              Use arrow keys to navigate • Number keys to select numbers • Delete/Backspace to clear • Ctrl+Z/Y to undo/redo • Escape to deselect
             </p>
           </div>
         </div>
