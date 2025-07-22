@@ -5,10 +5,10 @@ import sudoku from 'sudoku';
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export function generatePuzzle(difficulty: Difficulty = 'easy'): { puzzle: number[][], solution: number[][] } {
-    const rawPuzzle = sudoku.makepuzzle();
-    const rawSolution = sudoku.solvepuzzle(rawPuzzle);
+    const rawPuzzle = sudoku.makepuzzle() as (number | null)[];
+    const rawSolution = sudoku.solvepuzzle(rawPuzzle) as number[];
 
-    const solution = [];
+    const solution: number[][] = [];
 
     // Convert solution to 2D array
     for (let i = 0; i < 9; i++) {
@@ -32,7 +32,7 @@ function adjustDifficulty(puzzle: number[][], difficulty: Difficulty): number[][
     const adjustedPuzzle = puzzle.map(row => [...row]);
 
     // Count all filled cells (should be 81 since we start with complete solution)
-    let filledCells: [number, number][] = [];
+    const filledCells: [number, number][] = [];
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             if (adjustedPuzzle[i]?.[j] !== 0) {
