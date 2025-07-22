@@ -20,7 +20,7 @@ export default function CongratsModal({ isOpen, onClose, time, onNewGame }: Cong
                         <X className="w-6 h-6" />
                     </button>
                 </div>
-                <p className="text-neutral-200 mb-4">You've solved the Sudoku puzzle!</p>
+                <p className="text-neutral-200 mb-4">You&apos;ve solved the Sudoku puzzle!</p>
                 {/* TODO: make the time stop updating */}
                 <p className="text-neutral-200 mb-6">Your time: <span className="font-bold text-purple-400">{formatTime(time)}</span></p>
                 <div className="flex space-x-3">
