@@ -246,6 +246,13 @@ export default function Home() {
               onNumberSelect={setSelectedNumber}
               board={board.length ? board : Array(9).fill(Array(9).fill(0))}
             />
+
+            {/* Keyboard controls hint - same as loaded state */}
+            <div className="mt-4 text-center">
+              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                Use arrow keys to navigate • Number keys to select numbers • Delete/Backspace to clear • Ctrl+Z/Y to undo/redo • Escape to deselect
+              </p>
+            </div>
           </div>
         </div>
       </div>
